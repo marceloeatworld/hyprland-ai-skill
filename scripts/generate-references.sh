@@ -187,8 +187,8 @@ echo "==> Writing metadata..."
 
 # Write version info
 cat > "$REFS_DIR/.wiki-version" <<EOF
-commit=$WIKI_COMMIT
-date=$WIKI_DATE
+commit='$WIKI_COMMIT'
+date='$WIKI_DATE'
 EOF
 
 # Count results
