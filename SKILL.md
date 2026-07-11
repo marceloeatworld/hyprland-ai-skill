@@ -14,7 +14,7 @@ description: >-
   "Hyprland multi-monitor", "Hyprland tearing",
   or any topic related to configuring, troubleshooting, or extending the
   Hyprland Wayland compositor and its ecosystem tools.
-version: 0.2.0
+version: 0.3.0
 ---
 
 # Hyprland Documentation
@@ -23,17 +23,17 @@ Complete reference for the Hyprland Wayland compositor, auto-generated from the 
 
 The `references/` directory contains the full, unmodified wiki markdown from https://github.com/hyprwm/hyprland-wiki, updated daily.
 
-## Directives
+## How to Use
 
-- Base all answers on the official Hyprland wiki documentation in the reference files below.
-- **Since Hyprland 0.55, the config is Lua** (`~/.config/hypr/hyprland.lua`). The old hyprlang format (`hyprland.conf`) is deprecated. Check the user's version with `hyprctl version` when in doubt.
-- For Hyprland 0.55+, use Lua syntax: `hl.config({...})`, `hl.bind(...)`, `hl.monitor({...})`, `hl.window_rule({...})`, `hl.on(...)`.
-- For Hyprland 0.54 and earlier, use hyprlang syntax and point the user to the versioned wiki at https://wiki.hypr.land/0.54.0/ (the reference files here track the current Lua docs).
-- Split configs use Lua `require("subdir/file")`, not the old `source =` keyword.
+1. Identify the topic from the user's question and read the matching reference file from the tables below.
+2. Base answers on those files. If more detail is needed, fetch the latest docs from the raw GitHub URLs in Live Fetching.
+3. **Since Hyprland 0.55, the config is Lua** (`~/.config/hypr/hyprland.lua`): `hl.config({...})`, `hl.bind(...)`, `hl.monitor({...})`, `hl.window_rule({...})`, `hl.on(...)`. The old hyprlang format (`hyprland.conf`) is deprecated. Check the user's version with `hyprctl version` when in doubt.
+4. For Hyprland 0.54 and earlier, use hyprlang syntax and point the user to the versioned wiki at https://wiki.hypr.land/0.54.0/ (the reference files here track the current Lua docs).
+5. Split configs use Lua `require("subdir/file")`, not the old `source =` keyword.
+6. For NixOS users, note that `hyprpm` is unsupported on Nix — use Home Manager or the NixOS module for plugins.
+7. For troubleshooting, check `references/faq.md` first.
 
 ## Reference Files
-
-Identify the topic from the user's question, then read the matching reference file:
 
 ### Configuration
 
@@ -125,15 +125,6 @@ Examples:
 - `https://raw.githubusercontent.com/hyprwm/hyprland-wiki/main/content/Configuring/Advanced%20and%20Cool/Using-hyprctl.md`
 - `https://raw.githubusercontent.com/hyprwm/hyprland-wiki/main/content/Hypr%20Ecosystem/hyprlock.md`
 - `https://raw.githubusercontent.com/hyprwm/hyprland-wiki/main/content/Nix/Hyprland%20on%20NixOS.md`
-
-## Strategy
-
-1. Identify the topic from the user's question.
-2. Read the matching reference file from the tables above.
-3. Answer with config examples in Lua (`hyprland.lua`) for Hyprland 0.55+; use hyprlang only for pre-0.55 setups.
-4. If more detail is needed, fetch from the corresponding raw GitHub URL.
-5. For NixOS users, note that `hyprpm` is unsupported on Nix — use Home Manager or the NixOS module for plugins.
-6. For troubleshooting, check **`references/faq.md`** first.
 
 ## Quick Reference (Hyprland 0.55+, Lua config)
 
