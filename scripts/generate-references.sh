@@ -32,6 +32,10 @@ echo "==> Wiki commit: $WIKI_COMMIT ($WIKI_DATE)"
 
 mkdir -p "$REFS_DIR"
 
+# Pages that disappear upstream (renamed/moved) must fail the run loudly,
+# otherwise reference files silently freeze at their last-copied content.
+MISSING_PAGES=0
+
 # Helper: copy a wiki page to references with a source header
 # Args: source_path (relative to content/) output_filename wiki_url_path
 copy_page() {
@@ -40,7 +44,8 @@ copy_page() {
     local url_path="$3"
 
     if [[ ! -f "$src" ]]; then
-        echo "  WARN: $1 not found, skipping"
+        echo "  ERROR: $1 not found"
+        MISSING_PAGES=$((MISSING_PAGES + 1))
         return
     fi
 
@@ -58,6 +63,7 @@ copy_page() {
 # Helper: merge multiple wiki pages into one reference file
 # Args: output_filename header_comment url_path source_paths...
 merge_pages() {
+    local name="$1"
     local dst="$REFS_DIR/$1"
     local header="$2"
     local url_path="$3"
@@ -79,42 +85,54 @@ merge_pages() {
                 echo "---"
                 echo ""
             else
-                echo "  WARN: $src_path not found, skipping from merge" >&2
+                echo "  ERROR: $src_path not found (merge $name)" >&2
+                MISSING_PAGES=$((MISSING_PAGES + 1))
             fi
         done
     } > "$dst"
 
-    echo "  OK: $1 (merged)"
+    echo "  OK: $name (merged)"
 }
 
 echo ""
 echo "==> Generating reference files..."
 
 # --- Configuring ---
-copy_page "Configuring/Variables.md"             "variables.md"             "Configuring/Variables"
-copy_page "Configuring/Binds.md"                 "binds.md"                 "Configuring/Binds"
-copy_page "Configuring/Dispatchers.md"           "dispatchers.md"           "Configuring/Dispatchers"
-copy_page "Configuring/Window-Rules.md"          "window-rules.md"          "Configuring/Window-Rules"
-copy_page "Configuring/Monitors.md"              "monitors.md"              "Configuring/Monitors"
-copy_page "Configuring/Keywords.md"              "keywords.md"              "Configuring/Keywords"
-copy_page "Configuring/Animations.md"            "animations.md"            "Configuring/Animations"
-copy_page "Configuring/Workspace-Rules.md"       "workspace-rules.md"       "Configuring/Workspace-Rules"
-copy_page "Configuring/Using-hyprctl.md"         "hyprctl.md"               "Configuring/Using-hyprctl"
-copy_page "Configuring/Environment-variables.md" "environment-variables.md" "Configuring/Environment-variables"
-copy_page "Configuring/Performance.md"           "performance.md"           "Configuring/Performance"
-copy_page "Configuring/XWayland.md"              "xwayland.md"              "Configuring/XWayland"
-copy_page "Configuring/Tearing.md"               "tearing.md"              "Configuring/Tearing"
-copy_page "Configuring/Multi-GPU.md"             "multi-gpu.md"             "Configuring/Multi-GPU"
-copy_page "Configuring/Permissions.md"           "permissions.md"           "Configuring/Permissions"
-copy_page "Configuring/Gestures.md"              "gestures.md"              "Configuring/Gestures"
-copy_page "Configuring/Start.md"                 "start.md"                 "Configuring/Start"
+copy_page "Configuring/Start.md"                  "start.md"                  "Configuring/Start"
+copy_page "Configuring/Example-configurations.md" "example-configurations.md" "Configuring/Example-configurations"
+
+# Basics
+copy_page "Configuring/Basics/Variables.md"       "variables.md"       "Configuring/Basics/Variables"
+copy_page "Configuring/Basics/Binds.md"           "binds.md"           "Configuring/Basics/Binds"
+copy_page "Configuring/Basics/Dispatchers.md"     "dispatchers.md"     "Configuring/Basics/Dispatchers"
+copy_page "Configuring/Basics/Window-Rules.md"    "window-rules.md"    "Configuring/Basics/Window-Rules"
+copy_page "Configuring/Basics/Monitors.md"        "monitors.md"        "Configuring/Basics/Monitors"
+copy_page "Configuring/Basics/Workspace-Rules.md" "workspace-rules.md" "Configuring/Basics/Workspace-Rules"
+copy_page "Configuring/Basics/Autostart.md"       "autostart.md"       "Configuring/Basics/Autostart"
+
+# Advanced and Cool
+copy_page "Configuring/Advanced and Cool/Animations.md"              "animations.md"              "Configuring/Advanced-and-Cool/Animations"
+copy_page "Configuring/Advanced and Cool/Using-hyprctl.md"           "hyprctl.md"                 "Configuring/Advanced-and-Cool/Using-hyprctl"
+copy_page "Configuring/Advanced and Cool/Environment-variables.md"   "environment-variables.md"   "Configuring/Advanced-and-Cool/Environment-variables"
+copy_page "Configuring/Advanced and Cool/Performance.md"             "performance.md"             "Configuring/Advanced-and-Cool/Performance"
+copy_page "Configuring/Advanced and Cool/XWayland.md"                "xwayland.md"                "Configuring/Advanced-and-Cool/XWayland"
+copy_page "Configuring/Advanced and Cool/Tearing.md"                 "tearing.md"                 "Configuring/Advanced-and-Cool/Tearing"
+copy_page "Configuring/Advanced and Cool/Multi-GPU.md"               "multi-gpu.md"               "Configuring/Advanced-and-Cool/Multi-GPU"
+copy_page "Configuring/Advanced and Cool/Permissions.md"             "permissions.md"             "Configuring/Advanced-and-Cool/Permissions"
+copy_page "Configuring/Advanced and Cool/Gestures.md"                "gestures.md"                "Configuring/Advanced-and-Cool/Gestures"
+copy_page "Configuring/Advanced and Cool/Devices.md"                 "devices.md"                 "Configuring/Advanced-and-Cool/Devices"
+copy_page "Configuring/Advanced and Cool/Expanding-functionality.md" "expanding-functionality.md" "Configuring/Advanced-and-Cool/Expanding-functionality"
+copy_page "Configuring/Advanced and Cool/Notifications.md"           "notifications.md"           "Configuring/Advanced-and-Cool/Notifications"
+copy_page "Configuring/Advanced and Cool/Uncommon-tips-and-tricks.md" "uncommon-tips-and-tricks.md" "Configuring/Advanced-and-Cool/Uncommon-tips-and-tricks"
+copy_page "Configuring/Advanced and Cool/Virtual-GPU.md"             "virtual-gpu.md"             "Configuring/Advanced-and-Cool/Virtual-GPU"
 
 # Layouts: merge all layout pages into one
-merge_pages "layouts.md" "Hyprland Layouts Reference" "Configuring/Dwindle-Layout" \
-    "Configuring/Dwindle-Layout.md" \
-    "Configuring/Master-Layout.md" \
-    "Configuring/Scrolling-Layout.md" \
-    "Configuring/Monocle-Layout.md"
+merge_pages "layouts.md" "Hyprland Layouts Reference" "Configuring/Layouts" \
+    "Configuring/Layouts/Dwindle-Layout.md" \
+    "Configuring/Layouts/Master-Layout.md" \
+    "Configuring/Layouts/Scrolling-Layout.md" \
+    "Configuring/Layouts/Monocle-Layout.md" \
+    "Configuring/Layouts/Custom-Layouts.md"
 
 # --- IPC ---
 copy_page "IPC/_index.md" "ipc.md" "IPC"
@@ -163,24 +181,53 @@ copy_page "Hypr Ecosystem/hyprpolkitagent.md"                "hyprpolkitagent.md
 copy_page "Hypr Ecosystem/hyprshutdown.md"                   "hyprshutdown.md" "Hypr-Ecosystem/hyprshutdown"
 copy_page "Hypr Ecosystem/hyprland-qt-support.md"            "hyprland-qt-support.md" "Hypr-Ecosystem/hyprland-qt-support"
 
+# Developer-facing Hypr libraries: merge into one reference
+merge_pages "hypr-libraries.md" "Hypr Ecosystem Libraries Reference" "Hypr-Ecosystem" \
+    "Hypr Ecosystem/hyprtoolkit/_index.md" \
+    "Hypr Ecosystem/hyprtoolkit/development.md" \
+    "Hypr Ecosystem/hyprlang.md" \
+    "Hypr Ecosystem/hyprutils.md" \
+    "Hypr Ecosystem/hyprgraphics.md" \
+    "Hypr Ecosystem/aquamarine.md" \
+    "Hypr Ecosystem/hyprwayland-scanner.md" \
+    "Hypr Ecosystem/hyprland-guiutils.md" \
+    "Hypr Ecosystem/hyprqt6engine.md"
+
 # --- Useful Utilities ---
 merge_pages "useful-utilities.md" "Useful Utilities for Hyprland" "Useful-Utilities/Must-have" \
     "Useful Utilities/Must-have.md" \
     "Useful Utilities/Status-Bars.md" \
     "Useful Utilities/App-Launchers.md" \
+    "Useful Utilities/App-Clients.md" \
     "Useful Utilities/Wallpapers.md" \
     "Useful Utilities/Screen-Sharing.md" \
+    "Useful Utilities/Screenshots-and-Recording.md" \
     "Useful Utilities/Clipboard-Managers.md" \
+    "Useful Utilities/Color-Pickers.md" \
+    "Useful Utilities/File-Managers.md" \
+    "Useful Utilities/Phone-connect.md" \
+    "Useful Utilities/Systemd-start.md" \
+    "Useful Utilities/Hypr-Ecosystem.md" \
     "Useful Utilities/Other.md"
 
 # --- Contributing ---
 merge_pages "contributing.md" "Contributing and Debugging" "Contributing-and-Debugging" \
     "Contributing and Debugging/_index.md" \
     "Contributing and Debugging/Issue-Guidelines.md" \
-    "Contributing and Debugging/PR-Guidelines.md"
+    "Contributing and Debugging/PR-Guidelines.md" \
+    "Contributing and Debugging/Tests.md" \
+    "Contributing and Debugging/Translations.md"
 
 # --- Crashes ---
 copy_page "Crashes and Bugs/_index.md" "crashes-and-bugs.md" "Crashes-and-Bugs"
+
+if [[ $MISSING_PAGES -gt 0 ]]; then
+    echo ""
+    echo "==> ERROR: $MISSING_PAGES expected wiki page(s) missing." >&2
+    echo "    The wiki was likely reorganized upstream. Update the page list" >&2
+    echo "    in this script, otherwise reference files silently go stale." >&2
+    exit 1
+fi
 
 echo ""
 echo "==> Writing metadata..."

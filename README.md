@@ -80,7 +80,7 @@ The references are updated daily by GitHub Actions, so `git pull` always gives y
 
 | Category | Topics |
 |----------|--------|
-| **Configuration** | Variables, keybinds, dispatchers, window rules, monitors, animations, workspace rules, layouts (dwindle/master/scrolling/monocle), environment variables, XWayland, tearing, multi-GPU, gestures, permissions |
+| **Configuration** | Lua config (0.55+), variables, keybinds, dispatchers, window rules, monitors, autostart, animations, workspace rules, layouts (dwindle/master/scrolling/monocle/custom), Lua scripting and events, environment variables, XWayland, tearing, multi-GPU, gestures, permissions |
 | **hyprctl** | CLI commands, runtime config changes, IPC sockets, event handling |
 | **Hypr Ecosystem** | hyprlock, hypridle, hyprpaper, hyprlauncher, hyprpicker, hyprsunset, hyprcursor, xdg-desktop-portal-hyprland, and more |
 | **NixOS** | NixOS module, Home Manager, plugin management (hyprpm not supported on Nix) |
@@ -100,7 +100,7 @@ AI reads matching reference file from references/
 If more detail needed -> fetch latest from raw.githubusercontent.com
         |
         v
-Answer with correct hyprland.conf syntax
+Answer with correct config syntax (Lua for 0.55+, hyprlang before)
 ```
 
 The `SKILL.md` file acts as a routing table: it maps topics to reference files and provides fallback URLs for live fetching.
@@ -138,7 +138,8 @@ hyprland-ai-skill/
     ├── dispatchers.md                    # All dispatchers
     ├── window-rules.md                   # Window and layer rules
     ├── monitors.md                       # Monitor configuration
-    ├── keywords.md                       # exec-once, source, env, per-device
+    ├── autostart.md                      # Autostart (hyprland.start event)
+    ├── expanding-functionality.md        # Lua scripting, events, timers
     ├── animations.md                     # Animation tree and bezier curves
     ├── workspace-rules.md                # Workspace rules and smart gaps
     ├── hyprctl.md                        # hyprctl CLI reference
