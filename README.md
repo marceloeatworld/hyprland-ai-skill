@@ -20,7 +20,7 @@ git clone https://github.com/marceloeatworld/hyprland-ai-skill.git .cursor/skill
 git clone https://github.com/marceloeatworld/hyprland-ai-skill.git .windsurf/skills/hyprland
 
 # GitHub Copilot
-git clone https://github.com/marceloeatworld/hyprland-ai-skill.git .github/copilot-instructions.d/hyprland
+git clone https://github.com/marceloeatworld/hyprland-ai-skill.git .github/skills/hyprland
 
 # Cline
 git clone https://github.com/marceloeatworld/hyprland-ai-skill.git .cline/skills/hyprland
@@ -39,9 +39,6 @@ git clone https://github.com/marceloeatworld/hyprland-ai-skill.git .aider/skills
 
 # Amp
 git clone https://github.com/marceloeatworld/hyprland-ai-skill.git .amp/skills/hyprland
-
-# ForgeCode
-git clone https://github.com/marceloeatworld/hyprland-ai-skill.git .forgecode/skills/hyprland
 
 # Gemini CLI
 git clone https://github.com/marceloeatworld/hyprland-ai-skill.git .gemini/skills/hyprland
@@ -62,7 +59,6 @@ curl -fsSL https://raw.githubusercontent.com/marceloeatworld/hyprland-ai-skill/m
 curl -fsSL https://raw.githubusercontent.com/marceloeatworld/hyprland-ai-skill/main/install.sh | bash -s -- --copilot
 curl -fsSL https://raw.githubusercontent.com/marceloeatworld/hyprland-ai-skill/main/install.sh | bash -s -- --opencode
 curl -fsSL https://raw.githubusercontent.com/marceloeatworld/hyprland-ai-skill/main/install.sh | bash -s -- --amp
-curl -fsSL https://raw.githubusercontent.com/marceloeatworld/hyprland-ai-skill/main/install.sh | bash -s -- --forgecode
 curl -fsSL https://raw.githubusercontent.com/marceloeatworld/hyprland-ai-skill/main/install.sh | bash -s -- --custom /path/you/want
 ```
 
@@ -139,7 +135,7 @@ hyprland-ai-skill/
     ├── window-rules.md                   # Window and layer rules
     ├── monitors.md                       # Monitor configuration
     ├── autostart.md                      # Autostart (hyprland.start event)
-    ├── expanding-functionality.md        # Lua scripting, events, timers
+    ├── lua-scripting.md                  # Lua scripting, events, timers
     ├── animations.md                     # Animation tree and bezier curves
     ├── workspace-rules.md                # Workspace rules and smart gaps
     ├── hyprctl.md                        # hyprctl CLI reference

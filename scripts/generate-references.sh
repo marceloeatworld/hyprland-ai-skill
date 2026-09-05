@@ -31,6 +31,8 @@ WIKI_DATE=$(git -C "$WORK_DIR/wiki" log -1 --format=%ci)
 echo "==> Wiki commit: $WIKI_COMMIT ($WIKI_DATE)"
 
 mkdir -p "$REFS_DIR"
+# Remove previously generated files so renamed/dropped pages do not linger.
+rm -f "$REFS_DIR"/*.md
 
 # Pages that disappear upstream (renamed/moved) must fail the run loudly,
 # otherwise reference files silently freeze at their last-copied content.
@@ -97,129 +99,167 @@ merge_pages() {
 echo ""
 echo "==> Generating reference files..."
 
-# --- Configuring ---
-copy_page "Configuring/Start.md"                  "start.md"                  "Configuring/Start"
-copy_page "Configuring/Example-configurations.md" "example-configurations.md" "Configuring/Example-configurations"
+# Wiki layout since the 2026-08-29 restructure (hyprland-wiki cba1dbc):
+# lowercase paths, content/<section>/<subsection>/<page>.md.
 
-# Basics
-copy_page "Configuring/Basics/Variables.md"       "variables.md"       "Configuring/Basics/Variables"
-copy_page "Configuring/Basics/Binds.md"           "binds.md"           "Configuring/Basics/Binds"
-copy_page "Configuring/Basics/Dispatchers.md"     "dispatchers.md"     "Configuring/Basics/Dispatchers"
-copy_page "Configuring/Basics/Window-Rules.md"    "window-rules.md"    "Configuring/Basics/Window-Rules"
-copy_page "Configuring/Basics/Monitors.md"        "monitors.md"        "Configuring/Basics/Monitors"
-copy_page "Configuring/Basics/Workspace-Rules.md" "workspace-rules.md" "Configuring/Basics/Workspace-Rules"
-copy_page "Configuring/Basics/Autostart.md"       "autostart.md"       "Configuring/Basics/Autostart"
+# --- Configuring / Core ---
+merge_pages "start.md" "Configuring Hyprland: Basics" "configuring/core" \
+    "configuring/_index.md" \
+    "configuring/core/_index.md"
+copy_page "configuring/core/config-options.md"         "variables.md"             "configuring/core/config-options"
+copy_page "configuring/core/dispatchers.md"            "dispatchers.md"           "configuring/core/dispatchers"
+copy_page "configuring/core/autostart.md"              "autostart.md"             "configuring/core/autostart"
+copy_page "configuring/core/animations.md"             "animations.md"            "configuring/core/animations"
+copy_page "configuring/core/environment-variables.md"  "environment-variables.md" "configuring/core/environment-variables"
+copy_page "configuring/core/devices.md"                "devices.md"               "configuring/core/devices"
 
-# Advanced and Cool
-copy_page "Configuring/Advanced and Cool/Animations.md"              "animations.md"              "Configuring/Advanced-and-Cool/Animations"
-copy_page "Configuring/Advanced and Cool/Using-hyprctl.md"           "hyprctl.md"                 "Configuring/Advanced-and-Cool/Using-hyprctl"
-copy_page "Configuring/Advanced and Cool/Environment-variables.md"   "environment-variables.md"   "Configuring/Advanced-and-Cool/Environment-variables"
-copy_page "Configuring/Advanced and Cool/Performance.md"             "performance.md"             "Configuring/Advanced-and-Cool/Performance"
-copy_page "Configuring/Advanced and Cool/XWayland.md"                "xwayland.md"                "Configuring/Advanced-and-Cool/XWayland"
-copy_page "Configuring/Advanced and Cool/Tearing.md"                 "tearing.md"                 "Configuring/Advanced-and-Cool/Tearing"
-copy_page "Configuring/Advanced and Cool/Multi-GPU.md"               "multi-gpu.md"               "Configuring/Advanced-and-Cool/Multi-GPU"
-copy_page "Configuring/Advanced and Cool/Permissions.md"             "permissions.md"             "Configuring/Advanced-and-Cool/Permissions"
-copy_page "Configuring/Advanced and Cool/Gestures.md"                "gestures.md"                "Configuring/Advanced-and-Cool/Gestures"
-copy_page "Configuring/Advanced and Cool/Devices.md"                 "devices.md"                 "Configuring/Advanced-and-Cool/Devices"
-copy_page "Configuring/Advanced and Cool/Expanding-functionality.md" "expanding-functionality.md" "Configuring/Advanced-and-Cool/Expanding-functionality"
-copy_page "Configuring/Advanced and Cool/Notifications.md"           "notifications.md"           "Configuring/Advanced-and-Cool/Notifications"
-copy_page "Configuring/Advanced and Cool/Uncommon-tips-and-tricks.md" "uncommon-tips-and-tricks.md" "Configuring/Advanced-and-Cool/Uncommon-tips-and-tricks"
-copy_page "Configuring/Advanced and Cool/Virtual-GPU.md"             "virtual-gpu.md"             "Configuring/Advanced-and-Cool/Virtual-GPU"
+merge_pages "binds.md" "Hyprland Binds Reference" "configuring/core/binds" \
+    "configuring/core/binds/_index.md" \
+    "configuring/core/binds/flags.md" \
+    "configuring/core/binds/globals.md" \
+    "configuring/core/binds/submaps.md" \
+    "configuring/core/binds/switches.md" \
+    "configuring/core/binds/keyboard-layouts.md" \
+    "configuring/core/binds/devices/_index.md" \
+    "configuring/core/binds/devices/per-device.md" \
+    "configuring/core/binds/devices/mouse.md" \
+    "configuring/core/binds/devices/touchpad.md"
+copy_page "configuring/core/binds/gestures.md" "gestures.md" "configuring/core/binds/gestures"
 
-# Layouts: merge all layout pages into one
-merge_pages "layouts.md" "Hyprland Layouts Reference" "Configuring/Layouts" \
-    "Configuring/Layouts/Dwindle-Layout.md" \
-    "Configuring/Layouts/Master-Layout.md" \
-    "Configuring/Layouts/Scrolling-Layout.md" \
-    "Configuring/Layouts/Monocle-Layout.md" \
-    "Configuring/Layouts/Custom-Layouts.md"
+merge_pages "window-rules.md" "Hyprland Window and Layer Rules Reference" "configuring/core/rules" \
+    "configuring/core/rules/_index.md" \
+    "configuring/core/rules/window-rules.md" \
+    "configuring/core/rules/layer-rules.md"
+copy_page "configuring/core/rules/workspace-rules.md" "workspace-rules.md" "configuring/core/rules/workspace-rules"
+
+merge_pages "monitors.md" "Hyprland Monitors Reference" "configuring/core/monitors" \
+    "configuring/core/monitors/_index.md" \
+    "configuring/core/monitors/output-selection.md" \
+    "configuring/core/monitors/modes.md" \
+    "configuring/core/monitors/positioning.md" \
+    "configuring/core/monitors/colors.md"
+
+# Advanced configuration (Lua scripting)
+merge_pages "lua-scripting.md" "Hyprland Lua Scripting: Events and Utilities" "configuring/core/advanced-configuration" \
+    "configuring/core/advanced-configuration/_index.md" \
+    "configuring/core/advanced-configuration/events.md" \
+    "configuring/core/advanced-configuration/lua-utilities.md"
+copy_page "configuring/core/advanced-configuration/using-hyprctl.md" "hyprctl.md"       "configuring/core/advanced-configuration/using-hyprctl"
+copy_page "configuring/core/advanced-configuration/notifications.md" "notifications.md" "configuring/core/advanced-configuration/notifications"
+copy_page "configuring/core/advanced-configuration/permissions.md"   "permissions.md"   "configuring/core/advanced-configuration/permissions"
+
+# --- Configuring / Extra ---
+copy_page "configuring/extra/performance.md" "performance.md" "configuring/extra/performance"
+copy_page "configuring/extra/xwayland.md"    "xwayland.md"    "configuring/extra/xwayland"
+copy_page "configuring/extra/tearing.md"     "tearing.md"     "configuring/extra/tearing"
+copy_page "configuring/extra/multi-gpu.md"   "multi-gpu.md"   "configuring/extra/multi-gpu"
+copy_page "configuring/extra/virtual-gpu.md" "virtual-gpu.md" "configuring/extra/virtual-gpu"
+copy_page "configuring/extra/systemd.md"     "systemd.md"     "configuring/extra/systemd"
+
+# --- Configuring / misc ---
+copy_page "configuring/code-snippets.md"       "code-snippets.md"       "configuring/code-snippets"
+copy_page "configuring/naming-conventions.md"  "naming-conventions.md"  "configuring/naming-conventions"
+
+# --- Layouts ---
+merge_pages "layouts.md" "Hyprland Layouts Reference" "configuring/layouts" \
+    "configuring/layouts/dwindle-layout.md" \
+    "configuring/layouts/master-layout.md" \
+    "configuring/layouts/scrolling-layout.md" \
+    "configuring/layouts/monocle-layout.md" \
+    "configuring/layouts/custom-layouts.md"
 
 # --- IPC ---
-copy_page "IPC/_index.md" "ipc.md" "IPC"
+copy_page "ipc/_index.md" "ipc.md" "ipc"
 
 # --- Plugins ---
-merge_pages "plugins.md" "Hyprland Plugins Reference" "Plugins/Using-Plugins" \
-    "Plugins/Using-Plugins.md" \
-    "Plugins/Development/Getting-Started.md" \
-    "Plugins/Development/Advanced.md" \
-    "Plugins/Development/Plugin-Guidelines.md"
+merge_pages "plugins.md" "Hyprland Plugins Reference" "hyprland-plugins" \
+    "hyprland-plugins/using-plugins.md" \
+    "hyprland-plugins/development/_index.md" \
+    "hyprland-plugins/development/getting-started.md" \
+    "hyprland-plugins/development/advanced.md" \
+    "hyprland-plugins/development/plugin-guidelines.md"
 
 # --- Nix ---
-merge_pages "nix.md" "Hyprland on NixOS / Nix Reference" "Nix/Hyprland-on-NixOS" \
-    "Nix/Hyprland on NixOS.md" \
-    "Nix/Hyprland on Home Manager.md" \
-    "Nix/Hyprland on other distros.md" \
-    "Nix/Cachix.md" \
-    "Nix/Options & Overrides.md" \
-    "Nix/Plugins.md" \
-    "Nix/Contributing and Debugging.md"
+merge_pages "nix.md" "Hyprland on NixOS / Nix Reference" "nix" \
+    "nix/_index.md" \
+    "nix/installing-hyprland-on-nixos.md" \
+    "nix/configuring-hyprland-with-home-manager.md" \
+    "nix/configuring-hyprland-with-hjem.md" \
+    "nix/hyprland-on-any-distro-using-nix.md" \
+    "nix/cachix.md" \
+    "nix/advanced.md" \
+    "nix/contributing-and-debugging.md"
 
 # --- Nvidia ---
-copy_page "Nvidia/_index.md" "nvidia.md" "Nvidia"
+copy_page "nvidia/_index.md" "nvidia.md" "nvidia"
 
 # --- FAQ ---
-copy_page "FAQ/_index.md" "faq.md" "FAQ"
+copy_page "faq/_index.md" "faq.md" "faq"
 
 # --- Getting Started ---
-merge_pages "getting-started.md" "Getting Started with Hyprland" "Getting-Started/Installation" \
-    "Getting Started/Installation.md" \
-    "Getting Started/Master-Tutorial.md" \
-    "Getting Started/Preconfigured-setups.md"
+merge_pages "getting-started.md" "Getting Started with Hyprland" "getting-started" \
+    "getting-started/_index.md" \
+    "getting-started/installation.md" \
+    "getting-started/master-tutorial.md" \
+    "getting-started/preconfigured-setups.md"
 
-# --- Hypr Ecosystem ---
-copy_page "Hypr Ecosystem/hyprlock.md"                      "hyprlock.md"    "Hypr-Ecosystem/hyprlock"
-copy_page "Hypr Ecosystem/hypridle.md"                       "hypridle.md"    "Hypr-Ecosystem/hypridle"
-copy_page "Hypr Ecosystem/hyprpaper.md"                      "hyprpaper.md"   "Hypr-Ecosystem/hyprpaper"
-copy_page "Hypr Ecosystem/hyprlauncher.md"                   "hyprlauncher.md" "Hypr-Ecosystem/hyprlauncher"
-copy_page "Hypr Ecosystem/hyprpicker.md"                     "hyprpicker.md"  "Hypr-Ecosystem/hyprpicker"
-copy_page "Hypr Ecosystem/hyprsunset.md"                     "hyprsunset.md"  "Hypr-Ecosystem/hyprsunset"
-copy_page "Hypr Ecosystem/xdg-desktop-portal-hyprland.md"    "xdph.md"       "Hypr-Ecosystem/xdg-desktop-portal-hyprland"
-copy_page "Hypr Ecosystem/hyprcursor.md"                     "hyprcursor.md"  "Hypr-Ecosystem/hyprcursor"
-copy_page "Hypr Ecosystem/hyprpwcenter.md"                   "hyprpwcenter.md" "Hypr-Ecosystem/hyprpwcenter"
-copy_page "Hypr Ecosystem/hyprsysteminfo.md"                 "hyprsysteminfo.md" "Hypr-Ecosystem/hyprsysteminfo"
-copy_page "Hypr Ecosystem/hyprpolkitagent.md"                "hyprpolkitagent.md" "Hypr-Ecosystem/hyprpolkitagent"
-copy_page "Hypr Ecosystem/hyprshutdown.md"                   "hyprshutdown.md" "Hypr-Ecosystem/hyprshutdown"
-copy_page "Hypr Ecosystem/hyprland-qt-support.md"            "hyprland-qt-support.md" "Hypr-Ecosystem/hyprland-qt-support"
+# --- Hypr Ecosystem: user apps ---
+copy_page "hypr-ecosystem/user/hyprlock.md"                   "hyprlock.md"            "hypr-ecosystem/user/hyprlock"
+copy_page "hypr-ecosystem/user/hypridle.md"                   "hypridle.md"            "hypr-ecosystem/user/hypridle"
+copy_page "hypr-ecosystem/user/hyprpaper.md"                  "hyprpaper.md"           "hypr-ecosystem/user/hyprpaper"
+copy_page "hypr-ecosystem/user/hyprlauncher.md"               "hyprlauncher.md"        "hypr-ecosystem/user/hyprlauncher"
+copy_page "hypr-ecosystem/user/hyprpicker.md"                 "hyprpicker.md"          "hypr-ecosystem/user/hyprpicker"
+copy_page "hypr-ecosystem/user/hyprsunset.md"                 "hyprsunset.md"          "hypr-ecosystem/user/hyprsunset"
+copy_page "hypr-ecosystem/user/xdg-desktop-portal-hyprland.md" "xdph.md"              "hypr-ecosystem/user/xdg-desktop-portal-hyprland"
+copy_page "hypr-ecosystem/user/hyprcursor.md"                 "hyprcursor.md"          "hypr-ecosystem/user/hyprcursor"
+copy_page "hypr-ecosystem/user/hyprpwcenter.md"               "hyprpwcenter.md"        "hypr-ecosystem/user/hyprpwcenter"
+copy_page "hypr-ecosystem/user/hyprsysteminfo.md"             "hyprsysteminfo.md"      "hypr-ecosystem/user/hyprsysteminfo"
+copy_page "hypr-ecosystem/user/hyprpolkitagent.md"            "hyprpolkitagent.md"     "hypr-ecosystem/user/hyprpolkitagent"
+copy_page "hypr-ecosystem/user/hyprshutdown.md"               "hyprshutdown.md"        "hypr-ecosystem/user/hyprshutdown"
+merge_pages "hyprland-qt-support.md" "Hyprland Qt Support" "hypr-ecosystem/user/hyprland-qt-support" \
+    "hypr-ecosystem/user/hyprland-qt-support.md" \
+    "hypr-ecosystem/user/hyprqt6engine.md"
 
-# Developer-facing Hypr libraries: merge into one reference
-merge_pages "hypr-libraries.md" "Hypr Ecosystem Libraries Reference" "Hypr-Ecosystem" \
-    "Hypr Ecosystem/hyprtoolkit/_index.md" \
-    "Hypr Ecosystem/hyprtoolkit/development.md" \
-    "Hypr Ecosystem/hyprlang.md" \
-    "Hypr Ecosystem/hyprutils.md" \
-    "Hypr Ecosystem/hyprgraphics.md" \
-    "Hypr Ecosystem/aquamarine.md" \
-    "Hypr Ecosystem/hyprwayland-scanner.md" \
-    "Hypr Ecosystem/hyprland-guiutils.md" \
-    "Hypr Ecosystem/hyprqt6engine.md"
+# --- Hypr Ecosystem: developer libraries ---
+merge_pages "hypr-libraries.md" "Hypr Ecosystem Libraries Reference" "hypr-ecosystem" \
+    "hypr-ecosystem/_index.md" \
+    "hypr-ecosystem/user/hyprtoolkit.md" \
+    "hypr-ecosystem/dev/hyprtoolkit.md" \
+    "hypr-ecosystem/dev/hyprlang.md" \
+    "hypr-ecosystem/dev/hyprutils.md" \
+    "hypr-ecosystem/dev/hyprgraphics.md" \
+    "hypr-ecosystem/dev/aquamarine.md" \
+    "hypr-ecosystem/dev/hyprwayland-scanner.md" \
+    "hypr-ecosystem/dev/hyprland-guiutils.md"
 
 # --- Useful Utilities ---
-merge_pages "useful-utilities.md" "Useful Utilities for Hyprland" "Useful-Utilities/Must-have" \
-    "Useful Utilities/Must-have.md" \
-    "Useful Utilities/Status-Bars.md" \
-    "Useful Utilities/App-Launchers.md" \
-    "Useful Utilities/App-Clients.md" \
-    "Useful Utilities/Wallpapers.md" \
-    "Useful Utilities/Screen-Sharing.md" \
-    "Useful Utilities/Screenshots-and-Recording.md" \
-    "Useful Utilities/Clipboard-Managers.md" \
-    "Useful Utilities/Color-Pickers.md" \
-    "Useful Utilities/File-Managers.md" \
-    "Useful Utilities/Phone-connect.md" \
-    "Useful Utilities/Systemd-start.md" \
-    "Useful Utilities/Hypr-Ecosystem.md" \
-    "Useful Utilities/Other.md"
+merge_pages "useful-utilities.md" "Useful Utilities for Hyprland" "useful-utilities" \
+    "useful-utilities/must-have.md" \
+    "useful-utilities/uwsm.md" \
+    "useful-utilities/status-bars.md" \
+    "useful-utilities/app-launchers.md" \
+    "useful-utilities/app-clients.md" \
+    "useful-utilities/wallpapers.md" \
+    "useful-utilities/screen-sharing.md" \
+    "useful-utilities/screenshots-and-recording.md" \
+    "useful-utilities/clipboard-managers.md" \
+    "useful-utilities/color-pickers.md" \
+    "useful-utilities/file-managers.md" \
+    "useful-utilities/phone-connect.md" \
+    "useful-utilities/hypr-ecosystem.md" \
+    "useful-utilities/other.md"
 
 # --- Contributing ---
-merge_pages "contributing.md" "Contributing and Debugging" "Contributing-and-Debugging" \
-    "Contributing and Debugging/_index.md" \
-    "Contributing and Debugging/Issue-Guidelines.md" \
-    "Contributing and Debugging/PR-Guidelines.md" \
-    "Contributing and Debugging/Tests.md" \
-    "Contributing and Debugging/Translations.md"
+merge_pages "contributing.md" "Contributing and Debugging" "contributing-and-debugging" \
+    "contributing-and-debugging/_index.md" \
+    "contributing-and-debugging/issue-guidelines.md" \
+    "contributing-and-debugging/pr-guidelines.md" \
+    "contributing-and-debugging/wiki-guidelines.md" \
+    "contributing-and-debugging/tests.md" \
+    "contributing-and-debugging/translations.md"
 
 # --- Crashes ---
-copy_page "Crashes and Bugs/_index.md" "crashes-and-bugs.md" "Crashes-and-Bugs"
+copy_page "crashes-and-bugs/_index.md" "crashes-and-bugs.md" "crashes-and-bugs"
 
 if [[ $MISSING_PAGES -gt 0 ]]; then
     echo ""

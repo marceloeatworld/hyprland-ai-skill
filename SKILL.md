@@ -14,7 +14,7 @@ description: >-
   "Hyprland multi-monitor", "Hyprland tearing",
   or any topic related to configuring, troubleshooting, or extending the
   Hyprland Wayland compositor and its ecosystem tools.
-version: 0.3.0
+version: 0.4.0
 ---
 
 # Hyprland Documentation
@@ -50,7 +50,7 @@ The `references/` directory contains the full, unmodified wiki markdown from htt
 | Workspace rules and smart gaps | **`references/workspace-rules.md`** |
 | Environment variables | **`references/environment-variables.md`** |
 | Layouts (dwindle, master, scrolling, monocle, custom) | **`references/layouts.md`** |
-| Lua scripting, events, timers (hl.on, hl.exec_cmd) | **`references/expanding-functionality.md`** |
+| Lua scripting, events, timers (hl.on, hl.exec_cmd) | **`references/lua-scripting.md`** |
 | Per-device input config | **`references/devices.md`** |
 | Notifications API | **`references/notifications.md`** |
 | Performance tuning | **`references/performance.md`** |
@@ -60,8 +60,9 @@ The `references/` directory contains the full, unmodified wiki markdown from htt
 | Virtual GPU | **`references/virtual-gpu.md`** |
 | Permissions | **`references/permissions.md`** |
 | Gestures | **`references/gestures.md`** |
-| Uncommon tips and tricks | **`references/uncommon-tips-and-tricks.md`** |
-| Example configurations | **`references/example-configurations.md`** |
+| Systemd integration (graphical-session.target) | **`references/systemd.md`** |
+| Naming conventions (workspace, monitor, window selectors) | **`references/naming-conventions.md`** |
+| Lua code snippets and example configs | **`references/code-snippets.md`** |
 
 ### Tools
 
@@ -117,14 +118,16 @@ The `references/` directory contains the full, unmodified wiki markdown from htt
 When reference files are insufficient, fetch the latest docs from raw GitHub:
 
 ```
-https://raw.githubusercontent.com/hyprwm/hyprland-wiki/main/content/<Section>/<Page>.md
+https://raw.githubusercontent.com/hyprwm/hyprland-wiki/main/content/<section>/<page>.md
 ```
 
-Examples:
-- `https://raw.githubusercontent.com/hyprwm/hyprland-wiki/main/content/Configuring/Basics/Variables.md`
-- `https://raw.githubusercontent.com/hyprwm/hyprland-wiki/main/content/Configuring/Advanced%20and%20Cool/Using-hyprctl.md`
-- `https://raw.githubusercontent.com/hyprwm/hyprland-wiki/main/content/Hypr%20Ecosystem/hyprlock.md`
-- `https://raw.githubusercontent.com/hyprwm/hyprland-wiki/main/content/Nix/Hyprland%20on%20NixOS.md`
+Paths are lowercase. Section index pages are `_index.md`. Examples:
+- `https://raw.githubusercontent.com/hyprwm/hyprland-wiki/main/content/configuring/core/config-options.md`
+- `https://raw.githubusercontent.com/hyprwm/hyprland-wiki/main/content/configuring/core/advanced-configuration/using-hyprctl.md`
+- `https://raw.githubusercontent.com/hyprwm/hyprland-wiki/main/content/hypr-ecosystem/user/hyprlock.md`
+- `https://raw.githubusercontent.com/hyprwm/hyprland-wiki/main/content/nix/installing-hyprland-on-nixos.md`
+
+The `<!-- source: ... -->` header at the top of each reference file gives the matching wiki section.
 
 ## Quick Reference (Hyprland 0.55+, Lua config)
 
